@@ -1,0 +1,60 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'com.example.serial_demo'
+    compileSdk 34
+
+    defaultConfig {
+        ndk {
+            moduleName "serial_port"
+            abiFilters 'armeabi-v7a', 'x86','x86_64' , 'arm64-v8a'
+        }
+        applicationId "com.example.serial_demo"
+        minSdk 22
+        //noinspection ExpiredTargetSdkVersion,ExpiredTargetSdkVersion
+        targetSdk 22
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    sourceSets {
+        main {
+            jni.srcDirs = ['src/main/jniLibs']
+            jniLibs.srcDir 'src/main/jniLibs'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/jni/CMakeLists.txt" // 指定 Android.mk 文件路径
+            // 其他 CMake 选项
+        }
+    }
+}
+
+dependencies {
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.activity
+    implementation libs.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}
